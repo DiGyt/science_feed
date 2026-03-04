@@ -1,0 +1,116 @@
+Just an unstructured list of all (?) archives used across science:
+
+📌 Multidisciplinary & Large Aggregator Preprint Platforms
+
+These servers cover many fields across science, engineering, social sciences, and humanities.
+
+arXiv – broad scientific and quantitative fields (physics, math, CS, quantitative bio, stats, econ, etc.)
+
+OSF Preprints – umbrella platform aggregating many subject-specific archives
+
+Preprints.org – multidisciplinary open access archive
+
+Research Square – broad science and medicine preprints
+
+SSRN (Social Science Research Network) – general preprints across many fields including sciences
+
+Figshare – multidisciplinary repository often used for preprints and research outputs
+
+Dryad – open data and often linked preprints/data (less traditional server)
+
+Pangea – repository with preprint and research outputs across disciplines
+
+🔬 Science, Engineering & Technology-Oriented Preprint Servers
+Natural & Physical Sciences
+
+bioRxiv – life sciences and biology
+
+medRxiv – clinical and health sciences
+
+ChemRxiv – chemistry preprints
+
+viXra – general e-prints across sciences (less moderated)
+
+CERN Preprints (CDS) – particle physics and related HEP content
+
+OSF Community & Subject-Focused Servers
+
+(Many originate from the OSF Preprints network; discipline varies from science to social science)
+
+agriRxiv – agriculture & allied sciences
+
+EarthArXiv – earth & planetary sciences
+
+EcoEvoRxiv – ecology, evolution & conservation
+
+ECSarXiv – electrochemistry & solid state sciences
+
+engrXiv – engineering & technology
+
+BioHackrXiv – bio-informatics/biological community hacks/events
+
+MarXiv – marine & ocean sciences
+
+PaleorXiv – paleontology
+
+NutriXiv – nutritional science
+
+MindRxiv – mind, contemplative studies
+
+📊 Social Sciences, Humanities, & Cross-Field Archives
+
+Many of these also accept scholarship that overlaps scientific and applied research.
+
+SocArXiv – social sciences
+
+PsyArXiv – psychology & behavioral sciences
+
+CrimRxiv – criminology, justice
+
+Arabixiv – Arabic language multidisciplinary service
+
+AfricArXiv – Africa-focused multidisciplinary archive
+
+BodoArXiv – medieval and historical studies
+
+LawArXiv – legal scholarship
+
+EdArXiv – education science
+
+MetaArXiv – openness/transparency in research
+
+🌍 Regional & Specialized Preprint Servers
+
+ChinaXiv – multidisciplinary Chinese archive
+
+Preprints.ru – Russian multidisciplinary archive
+
+ARPHA Preprints – linked to Pensoft journals, covers many sciences
+
+AAS Open Research – Africa-based multidisciplinary, science & medicine
+
+AMRC Open Research – medical sciences via UK charities
+
+PhilSci-Archive – philosophy of science (overlaps with history/philosophy of science)
+
+PhilArchive – philosophy (broad)
+
+Authorea – collaborative writing platform with preprint hosting (multidisciplinary)
+
+📂 Other Platforms That Include Preprint Content
+
+(These are not always classic “preprint servers” but host prepublication work or early research outputs)
+
+Institutional Repositories (universities & research centers) – many host preprints even if not labeled that way
+
+National repositories (e.g., HAL in France) – host preprints among research outputs
+
+Semantic Scholar / OpenAlex – indexes preprints from many servers, not a server itself
+
+🧠 Notes on Scope & Coverage
+
+Not all platforms restrict by discipline — some are fully multidisciplinary (e.g., arXiv, Preprints.org, Research Square).
+
+OSF Preprints acts as a network hub with many specialized servers, and the list continues to grow.
+
+This list excludes institutional working-paper series that are discipline-specific but not typical preprint servers (e.g., NBER or RePEc working papers), unless they function as open preprint archives.
