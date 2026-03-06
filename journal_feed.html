@@ -3,177 +3,155 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Journal Feed — Cognition × Neuro × AI</title>
+<title>Research Feed — Cognition × Neuro × AI</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg:      #0e0f14;
-    --surface: #15171f;
-    --border:  #23263a;
-    --text:    #d8daf0;
-    --muted:   #5a5f7e;
-    --accent:  #7c9cff;
-    --gold:    #e8c97e;
-    --red:     #ff6b6b;
-    --green:   #6bffb8;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-weight: 300; min-height: 100vh; }
-
-  header {
-    padding: 36px 48px 24px;
-    border-bottom: 1px solid var(--border);
-    display: flex; align-items: flex-end; justify-content: space-between;
-    flex-wrap: wrap; gap: 16px;
-    position: sticky; top: 0; z-index: 100; background: var(--bg);
-  }
-  h1 { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: #fff; letter-spacing: -0.02em; }
-  h1 em { font-style: italic; font-weight: 400; color: var(--gold); }
-  .sub { font-size: 0.73rem; color: var(--muted); margin-top: 4px; letter-spacing: 0.05em; text-transform: uppercase; }
-
-  .controls { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-  .pill { padding: 5px 13px; border-radius: 20px; border: 1px solid var(--border); background: transparent; color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 0.77rem; cursor: pointer; transition: all 0.15s; }
-  .pill:hover { border-color: var(--accent); color: var(--accent); }
-  .pill.active { background: var(--accent); border-color: var(--accent); color: #0e0f14; font-weight: 500; }
-
-  .search-wrap { position: relative; }
-  .search-wrap::before { content: '⌕'; position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
-  .search-wrap input { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 5px 14px 5px 28px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.77rem; width: 170px; outline: none; }
-  .search-wrap input:focus { border-color: var(--accent); }
-
-  #stats { padding: 10px 48px; font-size: 0.73rem; color: var(--muted); border-bottom: 1px solid var(--border); min-height: 34px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
-  #stats b { color: var(--text); }
-
-  /* ── Feed: list layout ── */
-  #feed { padding: 0 48px 48px; }
-
-  .day-header {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.69rem;
-    color: var(--muted);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    padding: 24px 0 8px;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 2px;
-  }
-
-  .article-row {
-    display: flex;
-    align-items: baseline;
-    gap: 12px;
-    padding: 10px 0;
-    border-bottom: 1px solid #1a1d2a;
-    animation: fadeIn 0.22s ease both;
-  }
-  .article-row:hover { background: #12141e; margin: 0 -10px; padding-left: 10px; padding-right: 10px; border-radius: 5px; }
-  @keyframes fadeIn { from { opacity:0; transform:translateX(-5px); } to { opacity:1; } }
-
-  .j-tag { font-size: 0.65rem; font-weight: 500; padding: 2px 7px; border-radius: 5px; white-space: nowrap; letter-spacing: 0.02em; flex-shrink: 0; }
-  .cat-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; margin-top: 3px; }
-  .article-title { font-size: 0.87rem; color: #cdd0ec; line-height: 1.35; flex: 1; min-width: 0; }
-  .article-title a { color: inherit; text-decoration: none; }
-  .article-title a:hover { color: var(--gold); }
-
-  #loader { padding: 60px; text-align: center; }
-  .spinner { width: 32px; height: 32px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.75s linear infinite; margin: 0 auto 12px; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .load-text { font-size: 0.78rem; color: var(--muted); }
-  .load-text b { color: var(--accent); }
-
-  #sentinel { height: 1px; }
-  #more-btn { display: none; margin: 0 auto 48px; padding: 8px 24px; background: transparent; border: 1px solid var(--border); border-radius: 20px; color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 0.79rem; cursor: pointer; transition: all 0.15s; }
-  #more-btn:hover { border-color: var(--accent); color: var(--accent); }
-  #empty { display: none; padding: 60px; text-align: center; color: var(--muted); font-size: 0.85rem; }
-
-  #status-toggle { display: block; margin: 18px 48px 0; font-size: 0.72rem; color: var(--muted); cursor: pointer; width: fit-content; user-select: none; }
-  #status-toggle:hover { color: var(--accent); }
-  #status-panel { display: none; margin: 8px 48px 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 5px 20px; font-size: 0.72rem; }
-  .status-row { display: flex; align-items: center; gap: 7px; color: var(--muted); }
-  .sdot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-  .s-ok   { background: var(--green); }
-  .s-fail { background: var(--red); }
-  .s-wait { background: var(--muted); animation: pulse 1s ease infinite; }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
-
-  footer { padding: 20px 48px; border-top: 1px solid var(--border); font-size: 0.7rem; color: var(--muted); text-align: center; line-height: 1.8; }
-  footer a { color: var(--accent); text-decoration: none; }
-
-  @media(max-width:600px){
-    header, #stats, #feed, #loader, #status-toggle, #status-panel { padding-left: 16px; padding-right: 16px; }
-    header { flex-direction: column; align-items: flex-start; }
-  }
+:root {
+--bg: #0e0f14;
+--surface: #15171f;
+--border: #23263a;
+--text: #d8daf0;
+--muted: #5a5f7e;
+--accent: #7c9cff;
+--gold: #e8c97e;
+--red: #ff6b6b;
+--green: #6bffb8;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-weight: 300; min-height: 100vh; }
+header {
+padding: 36px 48px 24px;
+border-bottom: 1px solid var(--border);
+display: flex; align-items: flex-end; justify-content: space-between;
+flex-wrap: wrap; gap: 16px;
+position: sticky; top: 0; z-index: 100; background: var(--bg);
+}
+h1 { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: #fff; letter-spacing: -0.02em; }
+h1 em { font-style: italic; font-weight: 400; color: var(--gold); }
+.sub { font-size: 0.73rem; color: var(--muted); margin-top: 4px; letter-spacing: 0.05em; text-transform: uppercase; }
+.controls { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.pill { padding: 5px 13px; border-radius: 20px; border: 1px solid var(--border); background: transparent; color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 0.77rem; cursor: pointer; transition: all 0.15s; }
+.pill:hover { border-color: var(--accent); color: var(--accent); }
+.pill.active { background: var(--accent); border-color: var(--accent); color: #0e0f14; font-weight: 500; }
+.search-wrap { position: relative; }
+.search-wrap::before { content: '⌕'; position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
+.search-wrap input { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 5px 14px 5px 28px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.77rem; width: 170px; outline: none; }
+.search-wrap input:focus { border-color: var(--accent); }
+#stats { padding: 10px 48px; font-size: 0.73rem; color: var(--muted); border-bottom: 1px solid var(--border); min-height: 34px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+#stats b { color: var(--text); }
+#feed { padding: 0 48px 48px; }
+.day-header {
+font-family: 'DM Mono', monospace;
+font-size: 0.69rem;
+color: var(--muted);
+letter-spacing: 0.08em;
+text-transform: uppercase;
+padding: 24px 0 8px;
+border-bottom: 1px solid var(--border);
+margin-bottom: 2px;
+}
+.article-row {
+display: flex;
+align-items: baseline;
+gap: 12px;
+padding: 10px 0;
+border-bottom: 1px solid #1a1d2a;
+animation: fadeIn 0.22s ease both;
+}
+.article-row:hover { background: #12141e; margin: 0 -10px; padding-left: 10px; padding-right: 10px; border-radius: 5px; }
+@keyframes fadeIn { from { opacity:0; transform:translateX(-5px); } to { opacity:1; } }
+.j-tag { font-size: 0.65rem; font-weight: 500; padding: 2px 7px; border-radius: 5px; white-space: nowrap; letter-spacing: 0.02em; flex-shrink: 0; }
+.cat-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; margin-top: 3px; }
+.article-title { font-size: 0.87rem; color: #cdd0ec; line-height: 1.35; flex: 1; min-width: 0; }
+.article-title a { color: inherit; text-decoration: none; }
+.article-title a:hover { color: var(--gold); }
+#loader { padding: 60px; text-align: center; }
+.spinner { width: 32px; height: 32px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.75s linear infinite; margin: 0 auto 12px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.load-text { font-size: 0.78rem; color: var(--muted); }
+.load-text b { color: var(--accent); }
+#sentinel { height: 1px; }
+#more-btn { display: none; margin: 0 auto 48px; padding: 8px 24px; background: transparent; border: 1px solid var(--border); border-radius: 20px; color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 0.79rem; cursor: pointer; transition: all 0.15s; }
+#more-btn:hover { border-color: var(--accent); color: var(--accent); }
+#empty { display: none; padding: 60px; text-align: center; color: var(--muted); font-size: 0.85rem; }
+#status-toggle { display: block; margin: 18px 48px 0; font-size: 0.72rem; color: var(--muted); cursor: pointer; width: fit-content; user-select: none; }
+#status-toggle:hover { color: var(--accent); }
+#status-panel { display: none; margin: 8px 48px 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 5px 20px; font-size: 0.72rem; }
+.status-row { display: flex; align-items: center; gap: 7px; color: var(--muted); }
+.sdot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.s-ok { background: var(--green); }
+.s-fail { background: var(--red); }
+.s-wait { background: var(--muted); animation: pulse 1s ease infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+footer { padding: 20px 48px; border-top: 1px solid var(--border); font-size: 0.7rem; color: var(--muted); text-align: center; line-height: 1.8; }
+footer a { color: var(--accent); text-decoration: none; }
+@media(max-width:600px){
+header, #stats, #feed, #loader, #status-toggle, #status-panel { padding-left: 16px; padding-right: 16px; }
+header { flex-direction: column; align-items: flex-start; }
+}
 </style>
 </head>
 <body>
-
 <header>
-  <div>
-    <h1>Journal <em>Feed</em></h1>
-    <div class="sub">Cognition &times; Neuro &times; AI &mdash; live RSS &middot; newest first</div>
-  </div>
-  <div class="controls">
-    <button class="pill active" data-cat="all">All</button>
-    <button class="pill" data-cat="cogneuro">Cog. Neuro.</button>
-    <button class="pill" data-cat="cogpsych">Cog. Psych.</button>
-    <button class="pill" data-cat="compneuro">Comp. Neuro.</button>
-    <button class="pill" data-cat="ml">ML / AI</button>
-    <button class="pill" data-cat="neuro">Neuroscience</button>
-    <div class="search-wrap"><input id="search" type="text" placeholder="Search…"></div>
-  </div>
-</header>
-
-<div id="stats">Initialising…</div>
-
-<div id="loader">
-  <div class="spinner"></div>
-  <div class="load-text">Fetching <b id="prog">0</b> / <b id="tot">0</b> feeds…</div>
+<div>
+<h1>Research <em>Feed</em></h1>
+<div class="sub">Cognition &times; Neuro &times; AI &mdash; live RSS &middot; newest first</div>
 </div>
-
+<div class="controls">
+<button class="pill active" data-cat="all">All</button>
+<button class="pill" data-cat="cogneuro">Cog. Neuro.</button>
+<button class="pill" data-cat="cogpsych">Cog. Psych.</button>
+<button class="pill" data-cat="compneuro">Comp. Neuro.</button>
+<button class="pill" data-cat="ml">ML / AI</button>
+<button class="pill" data-cat="neuro">Neuroscience</button>
+<div class="search-wrap"><input id="search" type="text" placeholder="Search…"></div>
+</div>
+</header>
+<div id="stats">Initialising…</div>
+<div id="loader">
+<div class="spinner"></div>
+<div class="load-text">Fetching <b id="prog">0</b> / <b id="tot">0</b> feeds…</div>
+</div>
 <div id="empty">No articles match your filter.</div>
 <div id="feed"></div>
 <div id="sentinel"></div>
 <button id="more-btn" onclick="renderBatch()">Load more</button>
-
 <span id="status-toggle" onclick="toggleStatus()">▸ Feed status</span>
 <div id="status-panel"></div>
-
 <footer>
-  Live RSS &middot; proxies: corsproxy.io → allorigins.win → codetabs.com &middot;
-  Max time range: 3 months. &middot; Note: not guaranteed to contain all publications within the last 3 months.
-  Results depend on what each journal's RSS feed includes.<br>
-  <a href="https://github.com/DiGyt/science_feed" target="_blank">github.com/DiGyt/science_feed</a>
+Live RSS &middot; proxies: corsproxy.io → allorigins.win → codetabs.com &middot;
+Thumbnails shown when included in RSS feed (Nature, eLife, PLOS…)<br>
+<a href="https://github.com/DiGyt/science_feed" target="_blank">github.com/DiGyt/science_feed</a>
 </footer>
-
 <script>
 const JOURNALS = [
-  { name:'Nature Rev. Neuroscience',    short:'NRN',   cat:'neuro',     color:'#e8a87c', bg:'#2a1f18', rss:'https://www.nature.com/nrn.rss' },
-  { name:'Nature Neuroscience',          short:'NN',    cat:'neuro',     color:'#7cb8e8', bg:'#182030', rss:'https://www.nature.com/neuro.rss' },
-  { name:'Nature Machine Intelligence',  short:'NMI',   cat:'ml',        color:'#7ce8a8', bg:'#18301f', rss:'https://www.nature.com/natmachintell.rss' },
-  { name:'Nature Human Behaviour',       short:'NHB',   cat:'cogneuro',  color:'#e87cb8', bg:'#301828', rss:'https://www.nature.com/nathumbehav.rss' },
-  { name:'Nature Communications',        short:'NC',    cat:'neuro',     color:'#b0e87c', bg:'#202a18', rss:'https://www.nature.com/ncomms.rss' },
-  { name:'Molecular Psychiatry',         short:'MP',    cat:'neuro',     color:'#e8d07c', bg:'#2a2618', rss:'https://www.nature.com/mp.rss' },
-  { name:'Trends in Cognitive Sci.',     short:'TiCS',  cat:'cogneuro',  color:'#ff9f7c', bg:'#2a1e18', rss:'https://pubmed.ncbi.nlm.nih.gov/rss/journals/9708669/?limit=20&name=Trends%20Cogn%20Sci&utm_campaign=journals' },
-  { name:'Trends in Neurosciences',      short:'TiN',   cat:'neuro',     color:'#7ccfff', bg:'#182a36', rss:'https://www.cell.com/trends/neurosciences/current.rss' },
-  { name:'Neuron',                        short:'Neu',   cat:'neuro',     color:'#ffd17c', bg:'#2a2418', rss:'https://www.cell.com/neuron/current.rss' },
-  { name:'Current Biology',              short:'CB',    cat:'cogneuro',  color:'#a8ff7c', bg:'#1e2a18', rss:'https://www.cell.com/current-biology/current.rss' },
-  { name:'eLife',                        short:'eL',    cat:'neuro',     color:'#7cffe8', bg:'#182a26', rss:'https://elifesciences.org/rss/recent.xml' },
-  { name:'PLOS Comp. Biology',           short:'PCB',   cat:'compneuro', color:'#d07cff', bg:'#261830', rss:'https://journals.plos.org/ploscompbiol/feed/atom' },
-  { name:'NeuroImage',                   short:'NI',    cat:'cogneuro',  color:'#e8b07c', bg:'#2a2018', rss:'https://pubmed.ncbi.nlm.nih.gov/rss/journals/9918227365206676/?limit=20&name=Neuroimage%20Rep&utm_campaign=journals' },
-  { name:'Neuro & Biobeh. Reviews',      short:'NBR',   cat:'cogneuro',  color:'#b07ce8', bg:'#22182a', rss:'https://pubmed.ncbi.nlm.nih.gov/rss/journals/7806090/?limit=20&name=Neurosci%20Biobehav%20Rev&utm_campaign=journals' },
-  { name:'Neural Networks',              short:'NNw',   cat:'ml',        color:'#7ce87c', bg:'#182a18', rss:'https://pubmed.ncbi.nlm.nih.gov/rss/journals/8805018/?limit=20&name=Neural%20Netw&utm_campaign=journals' },
-  { name:'Neurocomputing',               short:'NCo',   cat:'ml',        color:'#e8e07c', bg:'#2a2a18', rss:'https://pubmed.ncbi.nlm.nih.gov/rss/journals/9884927/?limit=20&name=Neurocomputing%20%28Amst%29&utm_campaign=journals' },
-  { name:'IEEE TNNLS',                   short:'TNNLS', cat:'ml',        color:'#7cbcff', bg:'#18222a', rss:'https://pubmed.ncbi.nlm.nih.gov/rss/journals/101616214/?limit=20&name=IEEE%20Trans%20Neural%20Netw%20Learn%20Syst&utm_campaign=journals' },
-  { name:'Cerebral Cortex',              short:'CC',    cat:'cogneuro',  color:'#7cdce8', bg:'#18282a', rss:'https://pubmed.ncbi.nlm.nih.gov/rss/journals/9110718/?limit=20&name=Cereb%20Cortex&utm_campaign=journals' },
-  { name:'J. Neuroscience',             short:'JNS',   cat:'cogneuro',  color:'#e87c7c', bg:'#2a1818', rss:'https://www.jneurosci.org/rss/current.xml' },
-  { name:'J. Neurophysiology',          short:'JNP',   cat:'cogneuro',  color:'#7ce8c0', bg:'#182a22', rss:'https://pubmed.ncbi.nlm.nih.gov/rss/journals/0375404/?limit=20&name=J%20Neurophysiol&utm_campaign=journals' },
-  { name:'Annual Rev. Neuroscience',    short:'ARN',   cat:'neuro',     color:'#ffd07c', bg:'#2a2218', rss:'https://pubmed.ncbi.nlm.nih.gov/rss/journals/7804039/?limit=20&name=Annu%20Rev%20Neurosci&utm_campaign=journals' },
-  { name:'Behavioral & Brain Sci.',     short:'BBS',   cat:'cogneuro',  color:'#ffa07c', bg:'#2a1f18', rss:'https://pubmed.ncbi.nlm.nih.gov/rss/journals/7808666/?limit=20&name=Behav%20Brain%20Sci&utm_campaign=journals' },
-  { name:'Perspectives on Psych. Sci.', short:'PPS',   cat:'cogpsych',  color:'#ff7ca8', bg:'#2a1820', rss:'https://journals.sagepub.com/action/showFeed?ui=0&mi=ehikzz&ai=2b4&jc=ppsa&type=etoc&feed=rss' },
-  { name:'Psychological Science',        short:'PS',    cat:'cogpsych',  color:'#7cb8ff', bg:'#18222a', rss:'https://journals.sagepub.com/action/showFeed?ui=0&mi=ehikzz&ai=2b4&jc=pssa&type=etoc&feed=rss' },
-  { name:'Current Dir. in Psych. Sci.', short:'CDPS',  cat:'cogpsych',  color:'#ffb87c', bg:'#2a2018', rss:'https://journals.sagepub.com/action/showFeed?ui=0&mi=ehikzz&ai=2b4&jc=cdpa&type=etoc&feed=rss' },
-  { name:'AMPPS',                        short:'AMPPS', cat:'cogpsych',  color:'#7cffd0', bg:'#18302a', rss:'https://journals.sagepub.com/action/showFeed?ui=0&mi=ehikzz&ai=2b4&jc=ampa&type=etoc&feed=rss' },
-  { name:'JMLR',                         short:'JMLR',  cat:'ml',        color:'#7cffc0', bg:'#18302a', rss:'https://pubmed.ncbi.nlm.nih.gov/rss/journals/101262635/?limit=20&name=J%20Mach%20Learn%20Res&utm_campaign=journals' },
+  { name:'Nature Rev. Neuroscience', short:'NRN', cat:'neuro', color:'#e8a87c', bg:'#2a1f18', rss:'https://www.nature.com/nrn.rss' },
+  { name:'Nature Neuroscience', short:'NN', cat:'neuro', color:'#7cb8e8', bg:'#182030', rss:'https://www.nature.com/neuro.rss' },
+  { name:'Nature Machine Intelligence', short:'NMI', cat:'ml', color:'#7ce8a8', bg:'#18301f', rss:'https://www.nature.com/natmachintell.rss' },
+  { name:'Nature Human Behaviour', short:'NHB', cat:'cogneuro', color:'#e87cb8', bg:'#301828', rss:'https://www.nature.com/nathumbehav.rss' },
+  { name:'Nature Communications', short:'NC', cat:'neuro', color:'#b0e87c', bg:'#202a18', rss:'https://www.nature.com/ncomms.rss' },
+  { name:'Molecular Psychiatry', short:'MP', cat:'neuro', color:'#e8d07c', bg:'#2a2618', rss:'https://www.nature.com/mp.rss' },
+  { name:'Trends in Cognitive Sci.', short:'TiCS', cat:'cogneuro', color:'#ff9f7c', bg:'#2a1e18', rss:'https://pubmed.ncbi.nlm.nih.gov/rss/journals/9708669/?limit=20&name=Trends%20Cogn%20Sci&utm_campaign=journals' },
+  { name:'Trends in Neurosciences', short:'TiN', cat:'neuro', color:'#7ccfff', bg:'#182a36', rss:'https://www.cell.com/trends/neurosciences/current.rss' },
+  { name:'Neuron', short:'Neu', cat:'neuro', color:'#ffd17c', bg:'#2a2418', rss:'https://www.cell.com/neuron/current.rss' },
+  { name:'Current Biology', short:'CB', cat:'cogneuro', color:'#a8ff7c', bg:'#1e2a18', rss:'https://www.cell.com/current-biology/current.rss' },
+  { name:'eLife', short:'eL', cat:'neuro', color:'#7cffe8', bg:'#182a26', rss:'https://elifesciences.org/rss/recent.xml' },
+  { name:'PLOS Comp. Biology', short:'PCB', cat:'compneuro', color:'#d07cff', bg:'#261830', rss:'https://journals.plos.org/ploscompbiol/feed/atom' },
+  { name:'NeuroImage', short:'NI', cat:'cogneuro', color:'#e8b07c', bg:'#2a2018', rss:'https://pubmed.ncbi.nlm.nih.gov/rss/journals/9918227365206676/?limit=20&name=Neuroimage%20Rep&utm_campaign=journals' },
+  { name:'Neuro & Biobeh. Reviews', short:'NBR', cat:'cogneuro', color:'#b07ce8', bg:'#22182a', rss:'https://pubmed.ncbi.nlm.nih.gov/rss/journals/7806090/?limit=20&name=Neurosci%20Biobehav%20Rev&utm_campaign=journals' },
+  { name:'Neural Networks', short:'NNw', cat:'ml', color:'#7ce87c', bg:'#182a18', rss:'https://pubmed.ncbi.nlm.nih.gov/rss/journals/8805018/?limit=20&name=Neural%20Netw&utm_campaign=journals' },
+  { name:'Neurocomputing', short:'NCo', cat:'ml', color:'#e8e07c', bg:'#2a2a18', rss:'https://pubmed.ncbi.nlm.nih.gov/rss/journals/9884927/?limit=20&name=Neurocomputing%20%28Amst%29&utm_campaign=journals' },
+  { name:'IEEE TNNLS', short:'TNNLS', cat:'ml', color:'#7cbcff', bg:'#18222a', rss:'https://pubmed.ncbi.nlm.nih.gov/rss/journals/101616214/?limit=20&name=IEEE%20Trans%20Neural%20Netw%20Learn%20Syst&utm_campaign=journals' },
+  { name:'Cerebral Cortex', short:'CC', cat:'cogneuro', color:'#7cdce8', bg:'#18282a', rss:'https://pubmed.ncbi.nlm.nih.gov/rss/journals/9110718/?limit=20&name=Cereb%20Cortex&utm_campaign=journals' },
+  { name:'J. Neuroscience', short:'JNS', cat:'cogneuro', color:'#e87c7c', bg:'#2a1818', rss:'https://www.jneurosci.org/rss/current.xml' },
+  { name:'J. Neurophysiology', short:'JNP', cat:'cogneuro', color:'#7ce8c0', bg:'#182a22', rss:'https://pubmed.ncbi.nlm.nih.gov/rss/journals/0375404/?limit=20&name=J%20Neurophysiol&utm_campaign=journals' },
+  { name:'Annual Rev. Neuroscience', short:'ARN', cat:'neuro', color:'#ffd07c', bg:'#2a2218', rss:'https://pubmed.ncbi.nlm.nih.gov/rss/journals/7804039/?limit=20&name=Annu%20Rev%20Neurosci&utm_campaign=journals' },
+  { name:'Behavioral & Brain Sci.', short:'BBS', cat:'cogneuro', color:'#ffa07c', bg:'#2a1f18', rss:'https://pubmed.ncbi.nlm.nih.gov/rss/journals/7808666/?limit=20&name=Behav%20Brain%20Sci&utm_campaign=journals' },
+  { name:'Perspectives on Psych. Sci.', short:'PPS', cat:'cogpsych', color:'#ff7ca8', bg:'#2a1820', rss:'https://journals.sagepub.com/action/showFeed?ui=0&mi=ehikzz&ai=2b4&jc=ppsa&type=etoc&feed=rss' },
+  { name:'Psychological Science', short:'PS', cat:'cogpsych', color:'#7cb8ff', bg:'#18222a', rss:'https://journals.sagepub.com/action/showFeed?ui=0&mi=ehikzz&ai=2b4&jc=pssa&type=etoc&feed=rss' },
+  { name:'Current Dir. in Psych. Sci.', short:'CDPS', cat:'cogpsych', color:'#ffb87c', bg:'#2a2018', rss:'https://journals.sagepub.com/action/showFeed?ui=0&mi=ehikzz&ai=2b4&jc=cdpa&type=etoc&feed=rss' },
+  { name:'AMPPS', short:'AMPPS', cat:'cogpsych', color:'#7cffd0', bg:'#18302a', rss:'https://journals.sagepub.com/action/showFeed?ui=0&mi=ehikzz&ai=2b4&jc=ampa&type=etoc&feed=rss' },
+  { name:'JMLR', short:'JMLR', cat:'ml', color:'#7cffc0', bg:'#18302a', rss:'https://pubmed.ncbi.nlm.nih.gov/rss/journals/101262635/?limit=20&name=J%20Mach%20Learn%20Res&utm_campaign=journals' },
 ];
 
 const PROXIES = [
@@ -184,46 +162,51 @@ const PROXIES = [
 
 const CAT_COLOR = { cogneuro:'#7c9cff', cogpsych:'#ff7ca8', compneuro:'#d07cff', ml:'#7ce8a8', neuro:'#7ccfff' };
 const BATCH = 24;
-const THREE_MONTHS_MS = 90 * 24 * 60 * 60 * 1000;
-
 let allArticles = [], filtered = [], rendered = 0;
 let activeCat = 'all', searchQ = '';
 let done = 0;
 const feedStatus = {};
+
 JOURNALS.forEach(j => feedStatus[j.name] = 'wait');
 document.getElementById('tot').textContent = JOURNALS.length;
 renderStatusPanel();
 
-// ── FETCH ─────────────────────────────────────────────────────────────────────
+// ── FETCH ──────────────────────────────────────────────────────────────────────
 async function fetchWithFallback(rss) {
   for (const makeUrl of PROXIES) {
     try {
       const r = await fetch(makeUrl(rss), { signal: AbortSignal.timeout(12000) });
       if (!r.ok) continue;
       const t = await r.text();
-      if (t && t.length > 200 && (t.includes('<item>') || t.includes('<item ') || t.includes('<entry>') || t.includes('<entry '))) return t;
+      if (t && t.length > 200 && (
+        t.includes('<item>') || t.includes('<item ') ||
+        t.includes('<entry>') || t.includes('<entry ')
+      )) return t;
     } catch(e) {}
   }
   return null;
 }
 
-// ── PARSE ─────────────────────────────────────────────────────────────────────
+// ── PARSE ──────────────────────────────────────────────────────────────────────
+// Handles RSS 1.0 (RDF/dc:date/prism:publicationDate),
+//          RSS 2.0 (pubDate, plain or CDATA links),
+//          Atom   (published/updated, href attribute links)
+
 function parseXML(txt, j) {
   const results = [];
-  const cutoff = new Date(Date.now() - THREE_MONTHS_MS);
-  // Match <item>...</item> or <entry>...</entry> blocks via regex
-  // This avoids ALL DOMParser namespace / CDATA issues
   const blockRe = /<(item|entry)[\s>][\s\S]*?<\/\1>/gi;
   let bm;
   while ((bm = blockRe.exec(txt)) !== null) {
     const block = bm[0];
 
-    // Title (handles CDATA)
-    const titleM = block.match(/<(?:[\w-]+:)?title[^>]*>(?:<!\[CDATA\[([\s\S]*?)\]\]>|([^<]*))<\/(?:[\w-]+:)?title>/i);
+    // ── Title: CDATA or plain text, any namespace prefix ──
+    const titleM = block.match(
+      /<(?:[\w-]+:)?title[^>]*>\s*(?:<!\[CDATA\[([\s\S]*?)\]\]>|([\s\S]*?))\s*<\/(?:[\w-]+:)?title>/i
+    );
     const title = titleM ? (titleM[1] !== undefined ? titleM[1] : titleM[2] || '').trim() : '';
     if (!title) continue;
 
-    // Link: Atom href attr → <link> text → <guid> → <id>
+    // ── Link: Atom href attr → CDATA/plain <link> text → <guid> → <id> ──
     let link = '#';
     let m;
     m = block.match(/<link[^>]+href=["']([^"']+)["']/i);
@@ -241,17 +224,32 @@ function parseXML(txt, j) {
       if (m) link = m[1].trim();
     }
 
-    // Date: try each tag name including namespaced dc:date etc.
+    // ── Date: try every common tag, generous capture (no hard length limit) ──
+    // Order matters: most specific/reliable first.
+    const DATE_TAGS = [
+      'pubDate',               // RSS 2.0
+      'published',             // Atom
+      'updated',               // Atom fallback
+      'dc:date',               // RSS 1.0 / Dublin Core (Nature, etc.)
+      'prism:publicationDate', // PRISM (Nature RSS 1.0)
+      'date',                  // generic dc:date without prefix match
+      'publicationDate',       // misc
+    ];
     let rawDate = '';
-    for (const dtag of ['pubDate','published','updated','date','publicationDate']) {
-      m = block.match(new RegExp('<(?:[\\w-]+:)?' + dtag + '[^>]*>([^<]{6,40})<', 'i'));
-      if (m) { rawDate = m[1].trim(); break; }
+    for (const tag of DATE_TAGS) {
+      // Escape the colon so it matches literally, allow any namespace prefix too
+      const escaped = tag.replace(':', '[:]');
+      const re = new RegExp(
+        `<(?:[\\w-]+[:])?${escaped}[^>]*>\\s*(?:<!\\[CDATA\\[)?([\\s\\S]{4,80}?)(?:\\]\\]>)?\\s*<\\/`,
+        'i'
+      );
+      const dm = block.match(re);
+      if (dm) { rawDate = dm[1].trim(); break; }
     }
-    const date = rawDate ? new Date(rawDate) : new Date(0);
-    if (date.getTime() === 0) continue;
 
-    // Filter out articles older than 3 months
-    if (date < cutoff) continue;
+    const date = rawDate ? new Date(rawDate) : new Date(0);
+    // Skip items with no recognisable date rather than silently placing at epoch
+    if (!rawDate || isNaN(date.getTime())) continue;
 
     results.push({ title, link, date, journal: j.name, short: j.short, cat: j.cat, color: j.color, bg: j.bg });
   }
@@ -282,7 +280,7 @@ async function loadAll() {
   updateStats();
 }
 
-// ── FILTER ────────────────────────────────────────────────────────────────────
+// ── FILTER ─────────────────────────────────────────────────────────────────────
 function applyFilter() {
   const q = searchQ.toLowerCase();
   filtered = allArticles.filter(a => {
@@ -299,13 +297,12 @@ function applyFilter() {
   updateStats();
 }
 
-// ── RENDER ────────────────────────────────────────────────────────────────────
+// ── RENDER ─────────────────────────────────────────────────────────────────────
 function renderBatch() {
   const slice = filtered.slice(rendered, rendered + BATCH);
   if (!slice.length) return;
   const feed = document.getElementById('feed');
   let lastDay = feed.dataset.lastDay || '';
-
   slice.forEach((art, i) => {
     const day = art.date.toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
     if (day !== lastDay) {
@@ -317,7 +314,6 @@ function renderBatch() {
     }
     feed.appendChild(makeCard(art, i * 18));
   });
-
   feed.dataset.lastDay = lastDay;
   rendered += slice.length;
   const rem = filtered.length - rendered;
@@ -327,7 +323,7 @@ function renderBatch() {
   updateStats();
 }
 
-// ── ROW ───────────────────────────────────────────────────────────────────────
+// ── ROW ────────────────────────────────────────────────────────────────────────
 function makeCard(art, delay) {
   const row = document.createElement('div');
   row.className = 'article-row';
@@ -341,7 +337,7 @@ function makeCard(art, delay) {
 
 function e(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-// ── STATS ─────────────────────────────────────────────────────────────────────
+// ── STATS ──────────────────────────────────────────────────────────────────────
 function updateStats() {
   const ok   = Object.values(feedStatus).filter(s=>s==='ok').length;
   const fail = Object.values(feedStatus).filter(s=>s==='fail').length;
@@ -353,12 +349,13 @@ function updateStats() {
   document.getElementById('stats').innerHTML = s;
 }
 
-// ── STATUS PANEL ─────────────────────────────────────────────────────────────
+// ── STATUS PANEL ───────────────────────────────────────────────────────────────
 function renderStatusPanel() {
   document.getElementById('status-panel').innerHTML = JOURNALS.map(j =>
     `<div class="status-row"><span class="sdot s-${feedStatus[j.name]}"></span><span>${e(j.name)}</span></div>`
   ).join('');
 }
+
 let statusOpen = false;
 function toggleStatus() {
   statusOpen = !statusOpen;
@@ -366,18 +363,19 @@ function toggleStatus() {
   document.getElementById('status-toggle').textContent = (statusOpen ? '▾' : '▸') + ' Feed status';
 }
 
-// ── INFINITE SCROLL ───────────────────────────────────────────────────────────
+// ── INFINITE SCROLL ────────────────────────────────────────────────────────────
 new IntersectionObserver(entries => {
   if (entries[0].isIntersecting && rendered > 0 && rendered < filtered.length) renderBatch();
 }, { rootMargin: '400px' }).observe(document.getElementById('sentinel'));
 
-// ── PILLS + SEARCH ────────────────────────────────────────────────────────────
+// ── PILLS + SEARCH ─────────────────────────────────────────────────────────────
 document.querySelectorAll('.pill').forEach(btn => btn.addEventListener('click', () => {
   document.querySelectorAll('.pill').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   activeCat = btn.dataset.cat;
   applyFilter();
 }));
+
 let t;
 document.getElementById('search').addEventListener('input', ev => {
   clearTimeout(t);
