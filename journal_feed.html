@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Research Feed — Cognition × Neuro × AI</title>
+<title>Journal Feed — Cognition × Neuro × AI</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -102,7 +102,6 @@
   @media(max-width:600px){
     header, #stats, #feed, #loader, #status-toggle, #status-panel { padding-left: 16px; padding-right: 16px; }
     header { flex-direction: column; align-items: flex-start; }
-
   }
 </style>
 </head>
@@ -110,7 +109,7 @@
 
 <header>
   <div>
-    <h1>Research <em>Feed</em></h1>
+    <h1>Journal <em>Feed</em></h1>
     <div class="sub">Cognition &times; Neuro &times; AI &mdash; live RSS &middot; newest first</div>
   </div>
   <div class="controls">
@@ -141,6 +140,7 @@
 
 <footer>
   Live RSS &middot; proxies: corsproxy.io → allorigins.win → codetabs.com &middot;
+  Max time range: 3 months. &middot;
   Thumbnails shown when included in RSS feed (Nature, eLife, PLOS…)<br>
   <a href="https://github.com/DiGyt/science_feed" target="_blank">github.com/DiGyt/science_feed</a>
 </footer>
@@ -184,6 +184,7 @@ const PROXIES = [
 
 const CAT_COLOR = { cogneuro:'#7c9cff', cogpsych:'#ff7ca8', compneuro:'#d07cff', ml:'#7ce8a8', neuro:'#7ccfff' };
 const BATCH = 24;
+const THREE_MONTHS_MS = 90 * 24 * 60 * 60 * 1000;
 
 let allArticles = [], filtered = [], rendered = 0;
 let activeCat = 'all', searchQ = '';
@@ -209,6 +210,7 @@ async function fetchWithFallback(rss) {
 // ── PARSE ─────────────────────────────────────────────────────────────────────
 function parseXML(txt, j) {
   const results = [];
+  const cutoff = new Date(Date.now() - THREE_MONTHS_MS);
   // Match <item>...</item> or <entry>...</entry> blocks via regex
   // This avoids ALL DOMParser namespace / CDATA issues
   const blockRe = /<(item|entry)[\s>][\s\S]*?<\/\1>/gi;
@@ -247,6 +249,9 @@ function parseXML(txt, j) {
     }
     const date = rawDate ? new Date(rawDate) : new Date(0);
     if (date.getTime() === 0) continue;
+
+    // Filter out articles older than 3 months
+    if (date < cutoff) continue;
 
     results.push({ title, link, date, journal: j.name, short: j.short, cat: j.cat, color: j.color, bg: j.bg });
   }
