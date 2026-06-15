@@ -139,7 +139,7 @@
 <div id="status-panel"></div>
 
 <footer>
-  Live RSS &middot; proxies: corsproxy.io → allorigins.win → codetabs.com &middot;
+  Live RSS &middot; proxies: corsproxy.io → allorigins.win → codetabs.com → isomorphic-git.org &middot;
   Max time range: 3 months. &middot; Note: not guaranteed to contain all publications within the last 3 months.
   Results depend on what each journal's RSS feed includes.<br>
   <a href="https://github.com/DiGyt/science_feed" target="_blank">github.com/DiGyt/science_feed</a>
@@ -159,7 +159,7 @@ const JOURNALS = [
   { name:'Current Biology',              short:'CB',    cat:'cogneuro',  color:'#a8ff7c', bg:'#1e2a18', rss:'https://www.cell.com/current-biology/current.rss' },
   { name:'eLife',                        short:'eL',    cat:'neuro',     color:'#7cffe8', bg:'#182a26', rss:'https://elifesciences.org/rss/recent.xml' },
   { name:'PLOS Comp. Biology',           short:'PCB',   cat:'compneuro', color:'#d07cff', bg:'#261830', rss:'https://journals.plos.org/ploscompbiol/feed/atom' },
-  { name:'NeuroImage',                   short:'NI',    cat:'cogneuro',  color:'#e8b07c', bg:'#2a2018', rss:'https://pubmed.ncbi.nlm.nih.gov/rss/journals/9918227365206676/?limit=20&name=Neuroimage%20Rep&utm_campaign=journals' },
+  { name:'NeuroImage',                   short:'NI',    cat:'cogneuro',  color:'#e8b07c', bg:'#2a2018', rss:'https://pubmed.ncbi.nlm.nih.gov/rss/journals/9918227365206676/?limit=20&name=Neuroimage&utm_campaign=journals' },
   { name:'Neuro & Biobeh. Reviews',      short:'NBR',   cat:'cogneuro',  color:'#b07ce8', bg:'#22182a', rss:'https://pubmed.ncbi.nlm.nih.gov/rss/journals/7806090/?limit=20&name=Neurosci%20Biobehav%20Rev&utm_campaign=journals' },
   { name:'Neural Networks',              short:'NNw',   cat:'ml',        color:'#7ce87c', bg:'#182a18', rss:'https://pubmed.ncbi.nlm.nih.gov/rss/journals/8805018/?limit=20&name=Neural%20Netw&utm_campaign=journals' },
   { name:'Neurocomputing',               short:'NCo',   cat:'ml',        color:'#e8e07c', bg:'#2a2a18', rss:'https://pubmed.ncbi.nlm.nih.gov/rss/journals/9884927/?limit=20&name=Neurocomputing%20%28Amst%29&utm_campaign=journals' },
@@ -180,6 +180,7 @@ const PROXIES = [
   u => `https://corsproxy.io/?url=${encodeURIComponent(u)}`,
   u => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,
   u => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(u)}`,
+  u => `https://cors.isomorphic-git.org/${u}`,
 ];
 
 const CAT_COLOR = { cogneuro:'#7c9cff', cogpsych:'#ff7ca8', compneuro:'#d07cff', ml:'#7ce8a8', neuro:'#7ccfff' };
